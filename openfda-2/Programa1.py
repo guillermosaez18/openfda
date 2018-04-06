@@ -7,7 +7,7 @@ conn = http.client.HTTPSConnection("api.fda.gov")
 conn.request("GET", "/drug/label.json?search=active_ingredient:acetylsalicylic&limit=100", None, headers)
 r3 = conn.getresponse()
 print(r3.status, r3.reason)
-# Se lee el archivo json recibido y se pasa a string
+
 r3 = r3.read().decode("utf-8")
 # Lo pasa a diccionario
 aspirinas = json.loads(r3)
