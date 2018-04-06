@@ -10,7 +10,7 @@ print(r1.status, r1.reason)
 # Se lee el archivo json recibido y se pasa a string
 r1 = r1.read().decode("utf-8")
 # Lo pasa a diccionario
-drugs = json.loads(r1)
+drugs = json.loads(r1) 
 
 dicc = {}
 dicc["id"] = drugs["results"][0]["id"]
