@@ -1,6 +1,7 @@
 import http.client
 import json
 
+
 headers = {'User-Agent': 'http-client'}
 n = 10
 
@@ -18,10 +19,10 @@ contenido = ""
 lista = []
 
 for num in range(n):
-    try:
+    if not drugs["results"][num]["openfda"] == {}:
         lista.append("El medicamento {}, que tiene id <b>{}</b>, se llama: <b>{}</b>".format(num + 1, drugs["results"][num]["id"],
                                                             drugs["results"][num]["openfda"]["brand_name"][0]))
-    except KeyError:
+    else:
         lista.append("El medicamento {}, que tiene id <b>{}</b>, no muestra su nombre.".format(num + 1, drugs["results"][num]["id"]))
 
 contenido = "<!doctype html>\n<html>\n<body>"
