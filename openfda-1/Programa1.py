@@ -28,4 +28,4 @@ for feature,answer in info.items():
     print("El {} del medicamento es: {}".format(feature, answer))
 
 # Finalmente cerramos la conexión
-connect.close()
+connect.close() 

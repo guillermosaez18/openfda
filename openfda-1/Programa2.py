@@ -24,4 +24,4 @@ for num in range(n):
     print ("El medicamento número {} tiene id: {}".format(num+1, drugs["results"][num]["id"]))
 
 # Finalmente cerramos la conexión
-connect.close() 
+connect.close()
