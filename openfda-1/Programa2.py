@@ -16,7 +16,7 @@ response2 = connect.getresponse()
 print(response2.status, response2.reason)
 # Se lee la respuesta recibida y la descodifica desde utf-8 al formato local
 response2 = response2.read().decode("utf-8")
-# Lo pasa a diccionario
+# Lo pasa a diccionario 
 drugs = json.loads(response2)
 
 # Vamos pasando por los medicamentos en orden y extrayendo la información que queremos (del diccionario)
