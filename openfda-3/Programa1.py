@@ -40,11 +40,18 @@ for num in range(n):
 
 # Creamos el texto del archivo HTML y hacemos que contenga ese inicio (necesario)
 contenido = "<!doctype html>\n<html>\n<body>"
+# Ponemos un título
+contenido += "\n<h1>Medicamentos</h1>"
+# Creamos una lista con un tamaño de letra un poco mayor
+contenido += "\n<ul style='font-size:110%;'>"
 
-# Añadimos cada elemento de la lista anterior poniéndolo en línas separadas en el archvio HTML que estamos creando
+# Añadimos cada elemento de la lista anterior en el archvio HTML que estamos creando
 for i in info:
-    contenido += ("\n" + "<p>" + i + "</p>")
+    contenido += ("<li>" + i + "</li>")
 
+contenido += "\n</ul>"
+# Añadimos un link con texto
+contenido += "\nDatos obtenidos a partir de <a href='https://api.fda.gov/drug/label.json'>esta web</a>"
 # Añadimos el final (necesario) y ya tendríamos creado el código de la web
 contenido += "\n</body>\n</html>"
 
