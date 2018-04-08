@@ -9,7 +9,7 @@ connect = http.client.HTTPSConnection("api.fda.gov")
 connect.request("GET", "/drug/label.json", None, headers)
 # Leemos la información que nos responde el servidor
 response1 = connect.getresponse()
-# Imprimimos por pantalla línea de estado de la respuesta
+# Imprimimos por pantalla la línea de estado de la respuesta
 print(response1.status, response1.reason)
 # Se lee la respuesta recibida y la descodifica desde utf-8 al formato local
 response1 = response1.read().decode("utf-8")
@@ -28,4 +28,4 @@ for feature,answer in info.items():
     print("El {} del medicamento es: {}".format(feature, answer))
 
 # Finalmente cerramos la conexión
-connect.close() 
+connect.close()

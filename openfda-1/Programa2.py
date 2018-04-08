@@ -12,7 +12,7 @@ connect = http.client.HTTPSConnection("api.fda.gov")
 connect.request("GET", "/drug/label.json?limit={}".format(n), None, headers)
 # Leemos la información que nos responde el servidor
 response2 = connect.getresponse()
-# Imprimimos por pantalla línea de estado de la respuesta
+# Imprimimos por pantalla la línea de estado de la respuesta
 print(response2.status, response2.reason)
 # Se lee la respuesta recibida y la descodifica desde utf-8 al formato local
 response2 = response2.read().decode("utf-8")
