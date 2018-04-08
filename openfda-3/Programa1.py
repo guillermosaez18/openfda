@@ -1,11 +1,17 @@
 import http.client
 import json
 
+# COMIENZA AQUÍ EL CÓDIGO DEL CLIENTE
 
+# Escribimos la cabecera del mensaje de solicitud
 headers = {'User-Agent': 'http-client'}
+# Declaramos "n" como el número de medicamentos de los que queremos información
 n = 10
 
+# Se conecta a la API general de FDA, al servidor
 conn = http.client.HTTPSConnection("api.fda.gov")
+# Hace una solicitud mediante el verbo "GET" concretando el recurso desde donde obtendremos la información
+# Mediante el parámetro limit=n hacemos posible ver la información de n medicamentos
 conn.request("GET", "/drug/label.json?limit={}".format(n), None, headers)
 r2 = conn.getresponse()
 
