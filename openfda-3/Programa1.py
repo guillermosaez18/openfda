@@ -95,6 +95,7 @@ print("Serving at port", PORT)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt:
-    print("Interrumpido por el usuario\n")
+    print("Interrumpido por el usuario")
+    print ("")
 
 print("Servidor parado")
