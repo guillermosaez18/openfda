@@ -1,5 +1,6 @@
 import http.client
 import json
+
 # Escribimos la cabecera del mensaje de solicitud
 headers = {'User-Agent': 'http-client'}
 
@@ -31,3 +32,6 @@ for unidad in aspirinas:
         print("La aspirina cuya identificación es {} no contiene información sobre el fabricante.".format(unidad["id"]))
     else:
         print ("El fabricante de la aspirina con id {} es: {}".format(unidad["id"], unidad["openfda"]["manufacturer_name"][0]))
+
+# Finalmente cerramos la conexión
+connect.close()
