@@ -8,7 +8,7 @@ headers = {'User-Agent': 'http-client'}
 connect = http.client.HTTPSConnection("api.fda.gov")
 
 # Hace una solicitud mediante el verbo "GET" concretando el recurso desde donde obtendremos la información
-# Utilizamos el parámetro de búsqueda para el cual el principio activo es el ácido salicílico
+# Utilizamos el parámetro de búsqueda para el cual el principio activo es el ácido acetilsalicílico
 # Ya que esto es propio de las aspirinas
 # Y lo establecemos para obtener 100 porque es el máximo que podemos obtener en una solicitud de búsqueda
 connect.request("GET", "/drug/label.json?search=active_ingredient:acetylsalicylic&limit=100", None, headers)
