@@ -21,7 +21,7 @@ drugs = json.loads(response2)
 
 # Vamos pasando por los medicamentos en orden y extrayendo la información que queremos (del diccionario)
 for num in range(n):
-    print ("El medicamento número {} tiene id: {}".format(num+1, drugs["results"][num]["id"]))
+    print("El medicamento número {} tiene id: {}".format(num+1, drugs["results"][num]["id"]))
 
 # Finalmente cerramos la conexión
 connect.close()
