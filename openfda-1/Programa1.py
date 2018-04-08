@@ -1,5 +1,6 @@
 import http.client
 import json
+
 # Escribimos la cabecera del mensaje de solicitud
 headers = {'User-Agent': 'http-client'}
 
