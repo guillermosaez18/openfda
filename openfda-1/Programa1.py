@@ -4,7 +4,7 @@ import json
 # Escribimos la cabecera del mensaje de solicitud
 headers = {'User-Agent': 'http-client'}
 
-# Se conecta a la API general de FDA, al servidor al que nos 
+# Se conecta a la API general de FDA, al servidor
 connect = http.client.HTTPSConnection("api.fda.gov")
 # Hace una solicitud mediante el verbo "GET" concretando el recurso desde donde obtendremos la información
 connect.request("GET", "/drug/label.json", None, headers)
