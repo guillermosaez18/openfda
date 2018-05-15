@@ -3,12 +3,12 @@ import http.client
 import socketserver
 import json
 
-# -- Puerto donde lanzar el servidor
+# Puerto donde lanzar el servidor
 PORT = 8000
 socketserver.TCPServer.allow_reuse_address = True
 
 
-# -- Parametros de configuracion
+# Cabecera de cliente y páginas web varias
 headers = {'User-Agent': 'http-client'}
 pagina_inicio = "index.html"
 pagina_error = "index_error.html"
@@ -17,8 +17,9 @@ pagina_auth = "index_auth.html"
 
 class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
+    # Mediante get_info, pasándole el recurso como argumento, conseguiremos obtener la información que queremos
+    # y la guardaremos en forma de diccionario en drugs
     def get_info(self, recurso):
-
         connect = http.client.HTTPSConnection("api.fda.gov")
         connect.request("GET", "/drug/label.json?{}".format(recurso), None, headers)
 
@@ -30,31 +31,32 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
         return drugs
 
+
+    # Así podremos elegir qué página web proporcionará el servidor directamente poniendo la elección
     def pagina (self, eleccion):
         with open (eleccion, "r") as f:
             contenido = f.read()
 
         return contenido
 
-
+    # Obtenemos la lista de medicamentos con la extensión deseada (mediante recurso)
     def list_drugs(self, recurso):
 
+        # Recogemos la información llamando a get_info con el recurso introducido
         drugs = self.get_info(recurso)
 
         # Crearemos una lista donde meteremos la información
         info = []
 
-        # Para los n medicamentos, comprobamos si a openfda solo le corresponde un diccionario vacío o no
-        # En cada caso o se informa de ello o se le aporta el nombre utilizando el diccionario de OpenFDA
+        # Vamos a procesar la info del número de medicamentos que noa hayan dicho
+        # El cual es el número de la derecha del símbolo igual en "limit=n"
+        repet = recurso.split("=")[1]
+
+        # Para cada medicamento, comprobamos si a openfda solo le corresponde un diccionario vacío o no
+        # En cada caso o se informa de ello o se le aporta el nombre utilizando el diccionario drugs
         # Y cada línea de información se guarda como un elemento de una lista
         # <b> se utiliza para poner en negrita
-
-        if (recurso.split("=")[1]):
-            repes = recurso.split("=")[1]
-        else:
-            repes = 1
-
-        for num in range(int(repes)):
+        for num in range(int(repet)):
             if not drugs["results"][num]["openfda"] == {}:
                 info.append("El medicamento {}, que tiene id <b>{}</b>,"
                             " se llama: <b>{}</b>".format(num + 1, drugs["results"][num]["id"],
@@ -112,6 +114,7 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
         info = []
 
+        # Pasamos por cada uno de los medicamentos que se hayan recibido
         for num in range(len(drugs["results"])):
             if not drugs["results"][num]["openfda"] == {}:
                 info.append("El medicamento con id <b>{}</b> tiene el ingrediente activo: <b>{}</b>".format(
@@ -147,7 +150,7 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                                                                                               "manufacturer_name"][0]))
             else:
                 info.append(
-                    "El medicamento que tiene id <b>{}</b> no muestra info.".format(drugs["results"][num]["id"]))
+                    "El medicamento que tiene id <b>{}</b> no muestra datos.".format(drugs["results"][num]["id"]))
 
         contenido = "<!doctype html>\n<html>\n<body>"
         contenido += "\n<h1>Lista de empresas</h1>"
@@ -165,11 +168,11 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         drugs = self.get_info(recurso)
 
         info = []
-        mas = 0
         n = int(recurso.split("=")[1])
 
         for num in range(n):
 
+            # En caso de existir el campo "warnings" en cada medicamento específico, se aportan sus datos o no
             if "warnings" in drugs["results"][num]:
                 info.append("El medicamento con id <b>{}</b> tiene como advertencia: {}".format
                             (drugs["results"][num]["id"], drugs["results"][num]["warnings"][0]))
@@ -188,14 +191,19 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
         return contenido
 
+
+    # Se entra en do_Get cada vez que se realiza una petición GET por http
     def do_GET(self):
 
         redirigir = False
 
+        # self.path es el recurso al que se ha intentado acceder
         if "?" in self.path:
 
             if self.path.split("=")[0] == "/listDrugs?limit":
 
+                # Así evitamos entradas de caracteres no numéricos y creamos el recurso que se pasará a uno de los anteriores
+                # En cualquier caso, si se introcude algo no válido, enviamos una página de error
                 if (self.path.split("=")[1]).isdigit():
                     recurso = "limit=" + self.path.split("=")[1]
                     contenido = self.list_drugs(recurso)
@@ -221,6 +229,7 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
                 else:
                     contenido = self.pagina(pagina_error)
 
+            # Añadiendo el limit hacemos que nos dé más de 1 medicamento
             elif self.path.split("=")[0] == "/searchDrug?active_ingredient":
                 recurso = "search=active_ingredient:" + self.path.split("=")[1] + "&limit=10"
                 contenido = self.search_drug(recurso)
@@ -232,6 +241,9 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             else:
                 contenido = self.pagina(pagina_error)
 
+        # En caso de acceder a los siguientes por la URL directamente y no por el formulario
+        # Podemos acceder sin tener que poner el símbolo de interrogación
+        # En cualquiera de los casos, creamos el recurso que pasamos
         elif self.path == "/listDrugs":
             recurso = "limit=1"
             contenido = self.list_drugs(recurso)
@@ -257,7 +269,8 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         else:
             contenido = self.pagina(pagina_error)
 
-
+        # Para saber con qué cabecera y qué código tenemos que responder al cliente
+        # Nos fijamos en la página web que le pasamos
         if contenido == self.pagina(pagina_error):
             self.send_response(404)
             self.send_header('Content-type', 'text/html')
@@ -266,17 +279,21 @@ class TestHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(401)
             self.send_header("WWW-Authenticate", "Basic realm='nmrs_m7VKmomQ2YM3:'")
 
+        # Primero le redirigimos y le mandamos una cabecera, y después
+        # Le mandamos la cabecera normal al haber sido redirigido
         elif redirigir:
             self.send_response(200)
             self.send_header("Location", "localhost:8000")
             self.send_header('Content-type', 'text/html')
 
+        # En caso contrario a cualquiera especial, le pasamos la cabecera y el código normales
         else:
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
 
         self.end_headers()
 
+        # Enviamos el mensaje (código HTML) codificándolo a utf-8 primero
         self.wfile.write(bytes(contenido, "utf8"))
         return
 
