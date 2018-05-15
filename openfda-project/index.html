@@ -1,0 +1,34 @@
+<html>
+    <body>
+        <h2>Medicamentos</h2>
+        <form action="listDrugs" method="get">
+            Lista de medicamentos:<br>
+            <input type="text" name="limit" value=1>
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <form action="searchDrug" method="get">
+            Ingrediente activo:<br>
+            <input type="text" name="active_ingredient">
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <form action="searchCompany" method="get">
+            Empresa:<br>
+            <input type="text" name="company">
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <form action="listCompanies" method="get">
+            Lista de empresas:<br>
+            <input type="text" name="limit" value=1>
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <form action="listWarnings" method="get">
+            Lista de advertencias:<br>
+            <input type="text" name="limit" value=1>
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>
